@@ -94,6 +94,12 @@ public class Player : MonoBehaviour
       anim.SetBool("doublejump", false);
     }
 
+    if (collision.gameObject.tag == "Dangerous")
+    {
+      GameController.instance.ShowGameOver();
+      Destroy(gameObject);
+    }
+
   }
 
   void OnCollisionExit2D(Collision2D collision)
