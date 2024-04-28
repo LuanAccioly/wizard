@@ -108,10 +108,10 @@ public class Player : MonoBehaviour
     {
       isJumping = true;
     }
-    if (collision.gameObject.layer == 7)
-    {
-      isJumping = false;
-    }
+    // if (collision.gameObject.layer == 7)
+    // {
+    //   isJumping = false;
+    // }
   }
 
 
