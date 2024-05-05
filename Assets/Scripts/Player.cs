@@ -29,6 +29,7 @@ public class Player : MonoBehaviour
     horizontal = Input.GetAxis("Horizontal");
     Move();
     Jump();
+    PauseGame();
   }
 
 
@@ -63,6 +64,13 @@ public class Player : MonoBehaviour
     }
   }
 
+  void PauseGame()
+  {
+    if (Input.GetKeyDown(KeyCode.Escape))
+    {
+      GameController.instance.PauseGame();
+    }
+  }
   void Jump()
   {
     if (Input.GetButtonDown("Jump"))
