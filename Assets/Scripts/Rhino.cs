@@ -5,7 +5,6 @@ using UnityEngine;
 public class Rhino : MonoBehaviour
 {
   private Rigidbody2D rig;
-  private Animator anim;
   public float speed;
   public Transform rightCol;
   public Transform leftCol;
@@ -18,7 +17,6 @@ public class Rhino : MonoBehaviour
   void Start()
   {
     rig = GetComponent<Rigidbody2D>();
-    anim = GetComponent<Animator>();
   }
 
   // Update is called once per frame
@@ -33,20 +31,6 @@ public class Rhino : MonoBehaviour
     {
       transform.localScale = new Vector2(transform.localScale.x * -1f, transform.localScale.y);
       speed *= -1f;
-    }
-  }
-  void OnCollisionEnter2D(Collision2D col)
-  {
-    if (col.gameObject.tag == "Player")
-    {
-      float height = col.contacts[0].point.y - headPoint.position.y;
-
-      if (height > 0)
-      {
-        col.gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.up * 5, ForceMode2D.Impulse);
-        anim.SetTrigger("die");
-        Destroy(gameObject, 0.25f);
-      }
     }
   }
 }

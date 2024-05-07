@@ -1,7 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Callbacks;
-using UnityEditor.Tilemaps;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -15,6 +12,8 @@ public class Player : MonoBehaviour
   private bool isJumping;
   private bool doubleJump;
   private Animator anim;
+  private bool imortal;
+  private float imortalTime = 5.0f;
 
 
   void Start()
@@ -30,15 +29,23 @@ public class Player : MonoBehaviour
     Move();
     Jump();
     PauseGame();
+    if (imortal)
+    {
+      GetComponent<SpriteRenderer>().color =
+
+      new Color(255, 0, 0, 1f);
+    }
+    else
+    {
+      GetComponent<SpriteRenderer>().color =
+      new Color(255, 255, 255, 1f);
+    }
   }
 
 
 
   void Move()
   {
-    // Vector3 movement = new Vector3(Input.GetAxis("Horizontal"), 0f, 0f);
-    // transform.position += movement * Time.deltaTime * Speed;
-
     float movement = Input.GetAxis("Horizontal");
     rig.velocity = new Vector2(movement * Speed, rig.velocity.y);
     if (movement > 0f)
@@ -93,6 +100,16 @@ public class Player : MonoBehaviour
     }
   }
 
+  public void TurnImortal()
+  {
+    imortal = true;
+    StartCoroutine("ImortalTime");
+  }
+  IEnumerator ImortalTime()
+  {
+    yield return new WaitForSeconds(imortalTime);
+    imortal = false;
+  }
   void OnCollisionEnter2D(Collision2D collision)
   {
     if (collision.gameObject.layer == 8)
@@ -104,8 +121,20 @@ public class Player : MonoBehaviour
 
     if (collision.gameObject.tag == "Dangerous")
     {
-      GameController.instance.ShowGameOver();
-      Destroy(gameObject);
+      if (imortal)
+      {
+        if (collision.gameObject.GetComponent<Rhino>())
+        {
+          collision.gameObject.transform.GetComponent<Animator>().SetTrigger("die");
+          collision.gameObject.GetComponent<CapsuleCollider2D>().enabled = false;
+          Destroy(collision.gameObject, 0.25f);
+        }
+      }
+      else
+      {
+        GameController.instance.ShowGameOver();
+        Destroy(gameObject);
+      }
     }
 
   }
@@ -116,11 +145,5 @@ public class Player : MonoBehaviour
     {
       isJumping = true;
     }
-    // if (collision.gameObject.layer == 7)
-    // {
-    //   isJumping = false;
-    // }
   }
-
-
 }
